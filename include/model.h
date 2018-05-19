@@ -1,9 +1,24 @@
 #include <bits/stdc++.h>
 #include "GL/freeglut.h"
+#include "GL/glui.h"
 #include "GL/gl.h"
+#include "boundingBox.h"
 #include <GL/glu.h>
 
 using namespace std;
+
+class Color {
+	public:
+		float r, g, b;
+		Color() {
+			r = g = b = 0;
+		}
+		Color(float a, float x, float c) {
+			r = a;
+			g = x;
+			b = c;
+		}
+};
 
 class Vertex {
 	public:
@@ -53,42 +68,6 @@ class Model {
 		void drawBox();
 };
 
-class Light: public Model{
-	public:
-		Light();
-		void render();
-		void setDirection(GLfloat *pos);
-		void nextPosition(float *transm, float *rotsm, float* scle);
-};
-
-class Sun: public Model{
-	public:
-		Sun(char*);
-		void render();
-		void nextPosition(float *transm, float *rotsm, float* scle);
-};
-	
-class Planet: public Model{
-	public:
-		Planet(char*);
-		void render();
-		void nextPosition(float *transm, float *rotsm, float* scle);
-};
-
-class Moon: public Model{
-	public:
-		Moon(char*);
-		void render();
-		void nextPosition(float *transm, float *rotsm, float* scle);
-};
-
-class Spaceship: public Model{
-	public:
-		Spaceship(char*);
-		void render();
-		void nextPosition(float *transm, float *rotsm, float* scle);
-};
-
 class SceneGraphNode {
 	public:
 		Model* object;
@@ -111,26 +90,28 @@ class SceneGraph {
 	public:
 		vector<int> lights;
 		vector<SceneGraphNode*> graph;
+		BoundingBox boundingBoxes;
 		float eye[4];
 		float transmat[6];
+		float depth[1024][768];
+		void resetTimer();
 		int oldIndex, newIndex, tind;
 		bool normalColour, lighting, changed, bounding, mode;
 		float X, Y, Z;
 		int time, changecam;
 		void addModel(SceneGraphNode* sg);
-		void init();
-		void drawSkyBack(GLuint*);
-		void drawSkyLeft(GLuint*);
-		void drawSkyRight(GLuint*);
+		void init(int, char**);
 		SceneGraph() {
 			X = Y = Z = 0.0;
-			eye[0] = eye[1] = eye[2] = 0;
+			eye[0] = eye[1] = eye[2] = time = 0;
 			oldIndex = 0; newIndex = 0; tind = -1;
 			normalColour = changed = mode = false;
 			bounding = true;
 			lighting = true;
 		}
 		void render();
+		void drawBoundingBoxes();
+		void drawBackground(GLuint*);
 		void drawScene();
 		void updateScene();
 		void setCamera(float*, int);

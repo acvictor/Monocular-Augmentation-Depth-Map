@@ -42,7 +42,7 @@ void View::myinit() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	image0 = SOIL_load_image("data/s.jpg", &width0, &height0, 0, SOIL_LOAD_RGB);
+	image0 = SOIL_load_image("data/1.jpg", &width0, &height0, 0, SOIL_LOAD_RGB);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width0, height0, 0, GL_RGB, GL_UNSIGNED_BYTE, image0);
 	SOIL_free_image_data(image0);
 	
@@ -78,7 +78,6 @@ void View::drawAxis() {
 void View::display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	drawAxis();
 	controller->display(tex);
 	usleep(50000);
 	glutPostRedisplay();
@@ -111,70 +110,14 @@ void View::keyboard(unsigned char key, int x, int y) {
         		controller->zoomOut();
        		   	glutPostRedisplay();
         		break;
-        		
-        	case 'l':
-        		controller->light();
+
+        	case 'r':
+        		model->resetTimer();
         		glutPostRedisplay();
         		break;
-        		
-        	case 'h':
-        		controller->headLight();
-        		glutPostRedisplay();
-        		break;
-        		
-        	case 'v':
-        		controller->mode();
-        		glutPostRedisplay();
-        		break;
-        	
+
         	case 'b':
-        		controller->bounding();
-        		glutPostRedisplay();
-        		break;
-        		
-        	case '1':
-        		controller->spot1();
-        		glutPostRedisplay();
-        		break;
-        		
-        	case '2':
-        		controller->spot2();
-        		glutPostRedisplay();
-        		break;
-        	
-        	case '3':
-        		controller->increaseEarth();
-        		glutPostRedisplay();
-        		break;
-        	
-        	case '4':
-        		controller->increaseSun();
-        		glutPostRedisplay();
-        		break;
-        	
-        	case '5':
-        		controller->decreaseEarth();
-        		glutPostRedisplay();
-        		break;
-        	
-        	case '6':
-        		controller->decreaseSun();
-        		glutPostRedisplay();
-        		break;
-        	
-        	case 'c':
-        		controller->change = 1;
-        		glutPostRedisplay();
-        		break;
-        	
-        	case 'd':
-        		controller->change = 0;
-        		glutPostRedisplay();
-        		break;
-        		
-        	case 'e':
-        		controller->change = 2;
-        		glutPostRedisplay();
+        		controller->toggleBounding();
         		break;
         		
         	default:
@@ -205,10 +148,6 @@ void View::mouse(int button, int state, int x, int y) {
 		View::controller->rotate(0, 0, 0, 0);		      
        		glutPostRedisplay();
 	}
-	else if(button == GLUT_RIGHT_BUTTON and state == GLUT_UP) {
-		controller->pick();
-		glutPostRedisplay();
-	}
 }
 
 
@@ -230,17 +169,16 @@ void View::specialKeys(int key, int x, int y) {
 
 void View::init(int argc, char** argv) {
 	glutInit(&argc,argv);
-	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(700,700);
 	glutCreateWindow("3D");
 	View::myinit();
-	controller->run();
+	controller->run(argc, argv);
 	glutDisplayFunc(View::display); 
 	glutReshapeFunc(View::reshape);       
 	glutKeyboardFunc(View::keyboard);
 	glutSpecialFunc(View::specialKeys);
 	glutMotionFunc(View::mouseMotion); 
 	glutMouseFunc(View::mouse);
-	//glutTimerFunc(1000, update, 0);
 	glutMainLoop();
 }

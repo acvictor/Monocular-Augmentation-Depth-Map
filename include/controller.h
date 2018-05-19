@@ -20,37 +20,26 @@ class Vec {
 
 class Controller {
 	public:
-		int currentX, currentY, mState, change; 
+		int currentX, currentY, mState, change, which; 
 		float Position[3];
 		float data[3];
 		bool headl, s1, s2;
 		Trackball trackball;
 		SceneGraph *model;
-		void bindTextures();
-		void render(int);
 		void display(GLuint*);
 		void lighting();
 		void mode();
-		void run();
-		void drawFloor();
-		void headLight();
-		void bounding();
-		void spot1();
-		void spot2();
-		void pick();
+		void run(int, char**);
 		void zoomIn();
 		void zoomOut();
+		void toggleBounding();
 		void light();
-		void decreaseEarth();
-		void increaseEarth();
-		void increaseSun();
-		void decreaseSun();
 		void moveX(float);
 		void moveY(float);
 		void rotate(float, float, float, float);
 		Controller() {
 			currentX = currentY = mState=-1;
-			headl = s1 = s2 = true;
-			change = 0;
+			headl = s1 = s2 = false;
+			change = which = 0;
 		}
 };
